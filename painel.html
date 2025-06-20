@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel RC Locações</title>
+</head>
+<body style="font-family: sans-serif; padding: 20px;">
+  <h2>Painel RC Locações</h2>
+
+  <form id="formLogin">
+    <label>Usuário: </label><input type="text" id="usuario" /><br/>
+    <label>Senha: </label><input type="password" id="senha" /><br/><br/>
+    <button type="submit">Entrar</button>
+  </form>
+
+  <div id="painel" style="display: none; margin-top: 20px;">
+    <h3>Bem-vindo ao painel</h3>
+
+    <button onclick="verificarWhatsapp()">Conectar WhatsApp</button>
+    <div id="statusWhatsapp" style="margin-top:10px;"></div>
+    <div id="qrcodeWhatsapp" style="margin-top:10px;"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('formLogin');
+    const painel = document.getElementById('painel');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const user = document.getElementById('usuario').value;
+      const pass = document.getElementById('senha').value;
+
+      // Login simples só para visual
+      if (user === "admin" && pass === "rclocacoes2024") {
+        form.style.display = 'none';
+        painel.style.display = 'block';
+      } else {
+        alert("Usuário ou senha inválidos.");
+      }
+    });
+
+    function verificarWhatsapp() {
+      fetch('https://rc-locacoes-backend.onrender.com/whatsapp-status')
+        .then(res => res.json())
+        .then(data => {
+          const statusDiv = document.getElementById('statusWhatsapp');
+          const qrDiv = document.getElementById('qrcodeWhatsapp');
+
+          if (data.status === 'conectado') {
+            statusDiv.innerHTML = '✅ Conectado';
+            qrDiv.innerHTML = '';
+          } else {
+            statusDiv.innerHTML = '❌ Desconectado';
+            qrDiv.innerHTML = `<img src="${data.qrcode}" width="220" alt="QR Code do WhatsApp">`;
+          }
+        })
+        .catch(() => {
+          document.getElementById('statusWhatsapp').innerText = 'Erro ao verificar status.';
+        });
+    }
+  </script>
+</body>
+</html>

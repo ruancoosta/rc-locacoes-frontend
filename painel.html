@@ -1,72 +1,52 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <title>Painel RC Locações</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      padding: 20px;
-    }
-    #painel {
-      display: none;
-      margin-top: 20px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h2>Login - RC Locações</h2>
-  <form id="formLogin">
-    <label for="usuario">Usuário:</label>
-    <input type="text" id="usuario"><br><br>
-    <label for="senha">Senha:</label>
-    <input type="password" id="senha"><br><br>
-    <button type="submit">Entrar</button>
-  </form>
+  <div class="painel-container">
+    <!-- Cabeçalho do Painel -->
+    <header class="painel-header">
+      <h1>Painel RC Locações</h1>
+      <button onclick="showForm()" class="btn-cadastrar">Cadastrar Locatário</button>
+    </header>
 
-  <div id="painel">
-    <h3>Bem-vindo ao painel RC Locações</h3>
-    <button onclick="verificarWhatsapp()">Conectar WhatsApp</button>
-    <div id="statusWhatsapp" style="margin-top:10px;"></div>
-    <div id="qrcodeWhatsapp" style="margin-top:10px;"></div>
+    <!-- Formulário de Cadastro de Locatário -->
+    <div id="form-cadastro" class="form-cadastro">
+      <h2>Cadastrar Locatário</h2>
+      <form id="formCadastro">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" required>
+
+        <label for="moto">Moto:</label>
+        <input type="text" id="moto" required>
+
+        <label for="whatsapp">WhatsApp:</label>
+        <input type="text" id="whatsapp" required>
+
+        <label for="status">Status do Pagamento:</label>
+        <select id="status" required>
+          <option value="pendente">Pendente</option>
+          <option value="pago">Pago</option>
+        </select>
+
+        <button type="submit">Salvar</button>
+      </form>
+      <button onclick="hideForm()" class="btn-cancelar">Cancelar</button>
+    </div>
+
+    <!-- Lista de Locatários -->
+    <div class="locatarios-lista">
+      <h2>Locatários</h2>
+      <ul id="locatarios-list">
+        <!-- Lista de locatários vai aparecer aqui -->
+      </ul>
+    </div>
   </div>
 
-  <script>
-    const form = document.getElementById('formLogin');
-    const painel = document.getElementById('painel');
-
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const user = document.getElementById('usuario').value;
-      const pass = document.getElementById('senha').value;
-
-      if (user === "admin" && pass === "rclocacoes2024") {
-        form.style.display = 'none';
-        painel.style.display = 'block';
-      } else {
-        alert("Usuário ou senha inválidos.");
-      }
-    });
-
-    function verificarWhatsapp() {
-      fetch('https://rc-locacoes-backend.onrender.com/whatsapp-status')
-        .then(res => res.json())
-        .then(data => {
-          const statusDiv = document.getElementById('statusWhatsapp');
-          const qrDiv = document.getElementById('qrcodeWhatsapp');
-
-          if (data.status === 'conectado') {
-            statusDiv.innerHTML = '✅ Conectado';
-            qrDiv.innerHTML = '';
-          } else {
-            statusDiv.innerHTML = '❌ Desconectado';
-            qrDiv.innerHTML = `<img src="${data.qrcode}" width="220" alt="QR Code do WhatsApp">`;
-          }
-        })
-        .catch(() => {
-          document.getElementById('statusWhatsapp').innerText = 'Erro ao verificar status.';
-        });
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
